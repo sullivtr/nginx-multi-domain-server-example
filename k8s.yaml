@@ -4,22 +4,22 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-  name: hoboapplepay
+  name: nginxfiles
   namespace: default
 spec:
   rules:
-    - host: '*.tcpci.com'
+    - host: '*.domain.com'
       http:
         paths:
-          - path: /.well-known/apple-developer-merchantid-domain-association.txt
+          - path: /.well-known/some-file.txt
             backend:
-              serviceName: hoboapplepay
+              serviceName: nginxfiles
               servicePort: http
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: hoboapplepay
+  name: nginxfiles
 spec:
   ports:
   - name: http
@@ -27,29 +27,29 @@ spec:
     port: 80
   type: NodePort
   selector:
-    app: hoboapplepay
+    app: nginxfiles
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hoboapplepay
+  name: nginxfiles
   labels:
-    app: hoboapplepay
+    app: nginxfiles
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: hoboapplepay
+      app: nginxfiles
   template:
     metadata:
       labels:
-        app: hoboapplepay
+        app: nginxfiles
     spec:
       imagePullSecrets:
         - name: tylerorg
       containers:
-        - image: tylerorg/hoboapplepay:1.0.3
-          name: hoboapplepay
+        - image: org/conainer:tag
+          name: nginxfiles
           ports:
             - containerPort: 8080
               name: http
